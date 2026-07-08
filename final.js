@@ -1,121 +1,145 @@
+fetch("https://fakestoreapi.com/products")
 
-const apiUrl = "https://fakestoreapi.com/products";
+.then(res => res.json())
 
-const productContainer = document.querySelector("#productContainer");
-const totalProducts = document.querySelector("#totalProducts");
-const finalDiv = document.querySelector(".final");
-const errorDiv = document.querySelector("#error");
+.then(products => {
 
-fetch(apiUrl)
-    .then((response) => response.json())
-    .then((products) => {
+    displayProducts(products);
 
-        totalProducts.textContent =
-            "Total Products: " + products.length;
+    document.getElementById("search").addEventListener("keyup", filterProducts);
 
-        products.forEach((product) => {
+    document.getElementById("category").addEventListener("change", filterProducts);
 
-            
-            const card = document.createElement("div");
-            card.setAttribute("class", "card");
+    document.getElementById("price").addEventListener("keyup", filterProducts);
 
-            
-            const image = document.createElement("img");
-            image.setAttribute("src", product.image);
+    function filterProducts(){
 
-                                                            
-            const title = document.createElement("h3");
+        let search=document.getElementById("search").value.toLowerCase();
 
-            if (product.title.length > 30) {
-                title.textContent =
-                    product.title.slice(0, 30) + "...";
-            } else {
-                title.textContent = product.title;
+        let category=document.getElementById("category").value;
+
+        let price=document.getElementById("price").value;
+
+        let data="";
+
+        let count=0;
+
+        products.forEach(product=>{
+
+            let matchTitle=product.title.toLowerCase().includes(search);
+
+            let matchCategory=(category=="all" || product.category==category);
+
+            let matchPrice=(price=="" || product.price<=price);
+
+            if(matchTitle && matchCategory && matchPrice){
+
+                count++;
+
+                let desc=product.description;
+
+                if(desc.length>100){
+                    desc=desc.substring(0,100)+" Read More...";
+                }
+
+                data+=`
+
+                <div class="card">
+
+                    <img src="${product.image}">
+
+                    <h3>${product.title}</h3>
+
+                    <p><b>Category :</b> ${product.category}</p>
+
+                    <p><b>Price :</b> ₹${product.price}</p>
+
+                    <p><b>Rating :</b>  ${product.rating.rate}</p>
+
+                    <p>${desc}</p>
+
+                    <button>Buy Now</button>
+
+                </div>
+
+                `;
+
             }
 
-            
-            const price = document.createElement("p");
-            price.textContent = "Price: $" + product.price;
-
-        
-            const category = document.createElement("p");
-            category.textContent =
-                "Category: " + product.category;
-
-            
-            const description = document.createElement("p");
-
-            if (product.description.length > 50) {
-                description.textContent =
-                    product.description.slice(0, 50) + "...";
-            } else {
-                description.textContent =
-                    product.description;
-            }
-
-            
-            const tag = document.createElement("p");
-            tag.setAttribute("class", "tag");
-
-            if (product.price > 100) {
-                tag.textContent = "Expensive Product";
-            } else {
-                tag.textContent = "Budget Product";
-            }
-
-            
-            const priceBtn = document.createElement("button");
-            priceBtn.textContent = "Show Price";
-
-            priceBtn.addEventListener("click", () => {
-                alert(product.price);
-            });
-
-            
-            const categoryBtn = document.createElement("button");
-            categoryBtn.textContent = "Show Category";
-
-            categoryBtn.addEventListener("click", () => {
-                alert(product.category);
-            });
-
-    
-            const detailsBtn = document.createElement("button");
-            detailsBtn.textContent = "View Details";
-
-            detailsBtn.addEventListener("click", () => {
-                alert(
-                    "Title: " + product.title +
-                    "\nPrice: $" + product.price +
-                    "\nCategory: " + product.category
-                );
-            });
-
-            
-            card.append(
-                image,
-                title,
-                price,
-                category,
-                description,
-                tag,
-                priceBtn,
-                categoryBtn,
-                detailsBtn
-            );
-
-            productContainer.append(card);
         });
-    })
-    .catch((error) => {
-        errorDiv.textContent = "Something Went Wrong";
-        errorDiv.style.backgroundColor = "red";
-        errorDiv.style.color = "white";
-        errorDiv.style.textAlign = "center";
 
-        console.log(error);
-    })
-    .finally(() => {
-        finalDiv.textContent =
-            "Product Request Completed Successfully"
-    });
+        document.getElementById("count").innerHTML="Total Products : "+count;
+
+        if(count==0){
+
+            document.getElementById("products").innerHTML="<h2 class='noProduct'>No Products Found</h2>";
+
+        }
+
+        else{
+
+            document.getElementById("products").innerHTML=data;
+
+        }
+
+    }
+
+    function displayProducts(products){
+
+        let data="";
+
+        products.forEach(product=>{
+
+            let desc=product.description;
+
+            if(desc.length>100){
+                desc=desc.substring(0,100)+" Read More...";
+            }
+
+            data+=`
+
+            <div class="card">
+
+                <img src="${product.image}">
+
+                <h3>${product.title}</h3>
+
+                <p><b>Category :</b> ${product.category}</p>
+
+                <p><b>Price :</b> ₹${product.price}</p>
+
+                <p><b>Rating :</b>  ${product.rating.rate}</p>
+
+                <p>${desc}</p>
+
+                <button>Buy Now</button>
+
+            </div>
+
+            `;
+
+        });
+
+        document.getElementById("count").innerHTML="Total Products : "+products.length;
+
+        document.getElementById("products").innerHTML=data;
+
+    }
+
+})
+
+.catch(()=>{
+
+    document.body.innerHTML=`
+
+    <div class="error">
+
+    <h1> Unable to Load Products</h1>
+
+    <p>Please try again later.</p>
+
+    </div>
+
+    `;
+
+});
