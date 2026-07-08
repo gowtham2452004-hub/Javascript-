@@ -77,14 +77,14 @@ function payrollMenu(choice){
 }
 
 
-payrollMenu(1);  // View Employees
-payrollMenu(2);  // Search Employee by ID
-payrollMenu(3);  // Add Bonus
-payrollMenu(4);  // Highest Salary
-payrollMenu(5);  // Lowest Salary
-payrollMenu(6);  // Total Salary
-payrollMenu(7);  // Filter Above 40000
-payrollMenu(8);  // Employee Report
-payrollMenu(9);  // Current Date & Time
-payrollMenu(10); // Fetch Employees from API
-payrollMenu(11); // Exit
+payrollMenu(1);  
+payrollMenu(2);  
+payrollMenu(3);  
+payrollMenu(4);  
+payrollMenu(5);  
+payrollMenu(6);  
+payrollMenu(7);  
+payrollMenu(8);  
+payrollMenu(9);  
+payrollMenu(10); 
+payrollMenu(11);
